@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f2f5;
+    }
+    .calculator {
+      background-color: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    .display {
+      width: 100%;
+      height: 60px;
+      background: #222;
+      color: #fff;
+      font-size: 2em;
+      text-align: right;
+      padding: 10px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    button {
+      padding: 18px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      background-color: #eee;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #ddd;
+    }
+    .operator {
+      background-color: #f9a825;
+      color: white;
+    }
+    .operator:hover {
+      background-color: #f57f17;
+    }
+    .equal {
+      background-color: #00c853;
+      color: white;
+    }
+    .equal:hover {
+      background-color: #00bfa5;
+    }
+    .clear {
+      background-color: #d32f2f;
+      color: white;
+    }
+    .clear:hover {
+      background-color: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button onclick="clearDisplay()" class="clear">C</button>
+      <button onclick="backspace()">←</button>
+      <button onclick="toggleSign()">±</button>
+      <button onclick="appendOperator('/')">÷</button>
+
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button onclick="appendOperator('*')">×</button>
+
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button onclick="appendOperator('-')">−</button>
+
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+      <button onclick="appendOperator('+')" class="operator">+</button>
+
+      <button onclick="appendNumber('0')">0</button>
+      <button onclick="appendNumber('.')">.</button>
+      <button onclick="calculate()" class="equal">=</button>
+      <button onclick="calculatePercent()">%</button>
+
+      <button onclick="calculateSqrt()">√</button>
+      <button onclick="calculateSquare()">x²</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById('display');
+    let currentInput = '';
+
+    function appendNumber(num) {
+      if (currentInput === '0' && num !== '.') {
+        currentInput = num;
+      } else {
+        currentInput += num;
+      }
+      updateDisplay();
+    }
+
+    function appendOperator(op) {
+      if (currentInput === '') return;
+      const lastChar = currentInput[currentInput.length - 1];
+      if (['+', '-', '*', '/'].includes(lastChar)) {
+        currentInput = currentInput.slice(0, -1) + op;
+      } else {
+        currentInput += op;
+      }
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      currentInput = '';
+      updateDisplay();
+    }
+
+    function backspace() {
+      currentInput = currentInput.slice(0, -1);
+      updateDisplay();
+    }
+
+    function toggleSign() {
+      if (!currentInput) return;
+      try {
+        currentInput = (eval(currentInput) * -1).toString();
+        updateDisplay();
+      } catch {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function calculatePercent() {
+      if (!currentInput) return;
+      try {
+        currentInput = (eval(currentInput) / 100).toString();
+        updateDisplay();
+      } catch {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function calculateSqrt() {
+      if (!currentInput) return;
+      try {
+        currentInput = Math.sqrt(eval(currentInput)).toString();
+        updateDisplay();
+      } catch {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function calculateSquare() {
+      if (!currentInput) return;
+      try {
+        currentInput = Math.pow(eval(currentInput), 2).toString();
+        updateDisplay();
+      } catch {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function calculate() {
+      try {
+        currentInput = eval(currentInput).toString();
+        updateDisplay();
+      } catch {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function updateDisplay() {
+      display.textContent = currentInput || '0';
+    }
+  </script>
+</body>
+</html>
